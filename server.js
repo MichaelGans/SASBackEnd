@@ -77,14 +77,15 @@ var itrlistSchema = mongoose.Schema(
     order: String,
     eligibility: String,
     student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'},
-    
+    program: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'}
+
 }
 );
 
-var programSchema = mongoose.Schema(
+var academicprogramcodeSchema = mongoose.Schema(
 {
-    name: String,
-    itrlist: {type:mongoose.Schema.ObjectId, ref: 'ItrlistModel'}
+    name: String
+    //itrlist: {type:mongoose.Schema.ObjectId, ref: 'ItrlistModel'}
 }
 );
 //end added
@@ -98,6 +99,7 @@ var CityModel = mongoose.model('city', citySchema);
 var AcademicloadModel = mongoose.model('academicload', academicloadSchema);
 
 //added
+var AcademicprogramcodeModel = mongoose.model('academicprogramcode', academicprogramcodeSchema);
 var ItrlistModel = mongoose.model('itrlist', itrlistSchema);
 //end added
 
@@ -326,12 +328,25 @@ app.route('/itrlists')
             if (error) response.send(error);
             response.json({itrlist: itrlists});
         });
-    } else {
-        PermissionTypeModel.find({"student": Student.student}, function (error, students) {
+    } 
+});
+
+app.route('/academicprogramcodes')
+.post(function (request, response) {
+    var academicprogramcode = new AcademicprogramcodeModel(request.body.academicprogramcode);
+    academicprogramcode.save(function (error) {
+        if (error) response.send(error);
+        response.json({academicprogramcode: academicprogramcode});
+    });
+})
+.get(function (request, response) {
+    var academicprogramcode = request.query.academicprogramcode;
+    if (!academicprogramcode) {
+        AcademicprogramcodeModel.find(function (error, academicprogramcodes) {
             if (error) response.send(error);
-            response.json({itrlist: students});
+            response.json({academicprogramcode: academicprogramcodes});
         });
-    }
+    } 
 });
 //end added
 
