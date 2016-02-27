@@ -70,16 +70,25 @@ var academicloadSchema = mongoose.Schema(
     name: String
 }
 );
+
 //added
 var itrlistSchema = mongoose.Schema(
 {
-    name: String,
     order: String,
     eligibility: String,
-    student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}
+    student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'},
+    
+}
+);
+
+var programSchema = mongoose.Schema(
+{
+    name: String,
+    itrlist: {type:mongoose.Schema.ObjectId, ref: 'ItrlistModel'}
 }
 );
 //end added
+
 var StudentsModel = mongoose.model('student', studentsSchema);
 var ResidencyModel = mongoose.model('residency', residencySchema);
 var GenderModel = mongoose.model('gender', genderSchema);
