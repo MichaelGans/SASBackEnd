@@ -77,8 +77,7 @@ var itrlistSchema = mongoose.Schema(
     order: String,
     eligibility: String,
     student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'},
-    program: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'}
-
+    academicprogramcode: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'}
 }
 );
 
@@ -86,6 +85,14 @@ var academicprogramcodeSchema = mongoose.Schema(
 {
     name: String
     //itrlist: {type:mongoose.Schema.ObjectId, ref: 'ItrlistModel'}
+}
+);
+
+var programadministrationSchema = mongoose.Schema(
+{
+    name: String,
+    position: String,
+    academicprogramcode: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'}
 }
 );
 //end added
@@ -101,6 +108,7 @@ var AcademicloadModel = mongoose.model('academicload', academicloadSchema);
 //added
 var AcademicprogramcodeModel = mongoose.model('academicprogramcode', academicprogramcodeSchema);
 var ItrlistModel = mongoose.model('itrlist', itrlistSchema);
+var ProgramadministrationModel = mongoose.model('programadministration', programadministrationSchema);
 //end added
 
 app.route('/students')
@@ -331,10 +339,7 @@ app.route('/itrlists')
     } 
 });
 
-
-
-
-app.route('/itrlists/:itrlist_id')
+/*app.route('/itrlists/:itrlist_id')
 .get(function (request, response) {
     ItrlistModel.findById(request.params.itrlist_id, function (error, itrlist) {
         if (error) {
@@ -366,7 +371,7 @@ app.route('/itrlists/:itrlist_id')
             });
         }
     });
-})
+})*/
 
 app.route('/academicprogramcodes')
 .post(function (request, response) {
@@ -382,6 +387,24 @@ app.route('/academicprogramcodes')
         AcademicprogramcodeModel.find(function (error, academicprogramcodes) {
             if (error) response.send(error);
             response.json({academicprogramcode: academicprogramcodes});
+        });
+    } 
+});
+
+app.route('/programadministrations')
+.post(function (request, response) {
+    var programadministration = new ProgramadministrationModel(request.body.programadministration);
+    programadministration.save(function (error) {
+        if (error) response.send(error);
+        response.json({programadministration: programadministration});
+    });
+})
+.get(function (request, response) {
+    var programadministration = request.query.programadministration;
+    if (!programadministration) {
+        ProgramadministrationModel.find(function (error, programadministrations) {
+            if (error) response.send(error);
+            response.json({programadministration: programadministrations});
         });
     } 
 });
