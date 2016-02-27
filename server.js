@@ -34,7 +34,7 @@ var studentsSchema = mongoose.Schema(
     academicload: {type: mongoose.Schema.ObjectId, ref: 'AcademicloadModel'},
 
     //added
-    Itrlists: [{type: mongoose.Schema.ObjectId,ref: 'ItrlistModel'}]
+    //itrprograms: [{type: mongoose.Schema.ObjectId,ref: 'ItrprogramModel'}]
     //end added
 }
 );
@@ -72,7 +72,7 @@ var academicloadSchema = mongoose.Schema(
 );
 
 //added
-var itrlistSchema = mongoose.Schema(
+var itrprogramSchema = mongoose.Schema(
 {
     order: String,
     eligibility: String,
@@ -84,7 +84,7 @@ var itrlistSchema = mongoose.Schema(
 var academicprogramcodeSchema = mongoose.Schema(
 {
     name: String
-    //itrlist: {type:mongoose.Schema.ObjectId, ref: 'ItrlistModel'}
+    //itrprogram: {type:mongoose.Schema.ObjectId, ref: 'ItrprogramModel'}
 }
 );
 
@@ -107,7 +107,7 @@ var AcademicloadModel = mongoose.model('academicload', academicloadSchema);
 
 //added
 var AcademicprogramcodeModel = mongoose.model('academicprogramcode', academicprogramcodeSchema);
-var ItrlistModel = mongoose.model('itrlist', itrlistSchema);
+var ItrprogramModel = mongoose.model('itrprogram', itrprogramSchema);
 var ProgramadministrationModel = mongoose.model('programadministration', programadministrationSchema);
 //end added
 
@@ -321,20 +321,20 @@ app.route('/academicloads')
 });
 
 //added
-app.route('/itrlists')
+app.route('/itrprograms')
 .post(function (request, response) {
-    var itrlist = new ItrlistModel(request.body.itrlist);
-    itrlist.save(function (error) {
+    var itrprogram = new ItrprogramModel(request.body.itrprogram);
+    itrprogram.save(function (error) {
         if (error) response.send(error);
-        response.json({itrlist: itrlist});
+        response.json({itrprogram: itrprogram});
     });
 })
 .get(function (request, response) {
-    var itrlist = request.query.itrlist;
-    if (!itrlist) {
-        ItrlistModel.find(function (error, itrlists) {
+    var itrprogram = request.query.itrprogram;
+    if (!itrprogram) {
+        ItrprogramModel.find(function (error, itrprograms) {
             if (error) response.send(error);
-            response.json({itrlist: itrlists});
+            response.json({itrprogram: itrprograms});
         });
     } 
 });
