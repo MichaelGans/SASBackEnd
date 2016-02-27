@@ -331,6 +331,43 @@ app.route('/itrlists')
     } 
 });
 
+
+
+
+app.route('/itrlists/:itrlist_id')
+.get(function (request, response) {
+    ItrlistModel.findById(request.params.itrlist_id, function (error, itrlist) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({itrlist: itrlist});
+        }
+    });
+})
+.put(function (request, response) {
+    ItrlistModel.findById(request.params.itrlist_id, function (error, itrlist) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            itrlist.order = request.body.itrlist.order;
+            itrlist.eligibility = request.body.itrlist.eligibility;
+            itrlist.student = request.body.itrlist.student;
+            itrlist.academicprogramcode = request.body.itrlist.academicprogramcode;
+
+            itrlist.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.json({itrlist: itrlist});
+                }
+            });
+        }
+    });
+})
+
 app.route('/academicprogramcodes')
 .post(function (request, response) {
     var academicprogramcode = new AcademicprogramcodeModel(request.body.academicprogramcode);
