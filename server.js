@@ -84,7 +84,6 @@ var itrprogramSchema = mongoose.Schema(
 var academicprogramcodeSchema = mongoose.Schema(
 {
     name: String
-    //itrprogram: {type:mongoose.Schema.ObjectId, ref: 'ItrprogramModel'}
 }
 );
 
@@ -92,7 +91,22 @@ var programadministrationSchema = mongoose.Schema(
 {
     name: String,
     position: String,
-    academicprogramcode: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'}
+    academicprogramcode: {type:mongoose.Schema.ObjectId, ref: 'AcademicprogramcodeModel'},
+    department: {type:mongoose.Schema.ObjectId, ref: 'DepartmentModel'}
+}
+);
+
+
+var departmentSchema = mongoose.Schema(
+{
+    name: String,
+    faculty: {type:mongoose.Schema.ObjectId, ref: 'FacultyModel'}
+}
+);
+
+var facultySchema = mongoose.Schema(
+{
+    name: String
 }
 );
 //end added
@@ -109,6 +123,9 @@ var AcademicloadModel = mongoose.model('academicload', academicloadSchema);
 var AcademicprogramcodeModel = mongoose.model('academicprogramcode', academicprogramcodeSchema);
 var ItrprogramModel = mongoose.model('itrprogram', itrprogramSchema);
 var ProgramadministrationModel = mongoose.model('programadministration', programadministrationSchema);
+
+var FacultyModel = mongoose.model('faculty', facultySchema);
+var DepartmentModel = mongoose.model('department', departmentSchema);
 //end added
 
 app.route('/students')
@@ -405,6 +422,42 @@ app.route('/programadministrations')
         ProgramadministrationModel.find(function (error, programadministrations) {
             if (error) response.send(error);
             response.json({programadministration: programadministrations});
+        });
+    } 
+});
+
+app.route('/departments')
+.post(function (request, response) {
+    var department = new DepartmentModel(request.body.department);
+    department.save(function (error) {
+        if (error) response.send(error);
+        response.json({department: department});
+    });
+})
+.get(function (request, response) {
+    var department = request.query.department;
+    if (!department) {
+        DepartmentModel.find(function (error, departments) {
+            if (error) response.send(error);
+            response.json({department: departments});
+        });
+    } 
+});
+
+app.route('/faculties')
+.post(function (request, response) {
+    var faculty = new FacultyModel(request.body.faculty);
+    faculty.save(function (error) {
+        if (error) response.send(error);
+        response.json({faculty: faculty});
+    });
+})
+.get(function (request, response) {
+    var faculty = request.query.faculty;
+    if (!faculty) {
+        FacultyModel.find(function (error, faculties) {
+            if (error) response.send(error);
+            response.json({faculty: faculties});
         });
     } 
 });
